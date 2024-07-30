@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TensorFlow.js Inference</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+    <h1>TensorFlow.js Inference</h1>
+    <div id="output"></div>
+    <script>
+        async function loadModel() {
+            // モデルのパスはGitHub Pages上での相対パスです
+            const model = await tf.loadLayersModel('models/model.json');
+            console.log('Model loaded');
+
+            // 推論のための入力データを作成します（ここでは仮のデータを使用）
+            const inputData = tf.tensor([1, 2, 3, 4]); // 実際のデータに置き換えてください
+            const prediction = model.predict(inputData);
+            
+            // 結果を出力
+            prediction.print();
+        }
+
+        // ページ読み込み後にモデルをロードして推論を実行
+        window.onload = loadModel;
+    </script>
+</body>
+</html>
