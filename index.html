@@ -1,55 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TensorFlow.js Inference</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <meta charset="UTF-8">
+    <title>Element Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script src="app.js"></script>
 </head>
-<body>
-    <h1>TensorFlow.js Inference</h1>
-    <div id="output"></div>
-    <p>OK</p>
-    <script>
-        // 訓練時に使用した元素辞書
-        const elements = {"H": 1, "He": 2, "Li": 3, "Be": 4, "B": 5, "C": 6, "N": 7, "O": 8, "F": 9, "Ne": 10,
-                          "Na": 11, "Mg": 12, "Al": 13, "Si": 14, "P": 15, "S": 16, "Cl": 17, "Ar": 18, "K": 19, "Ca": 20,
-                          "Fe": 26, "Cu": 29, "Zn": 30, "I": 53};
-
-        // データ変換関数
-        function convertElement(data) {
-            return data.map(row => 
-                row.map(element => elements[element] || console.log(`Unknown element: ${element}`))
-            );
-        }
-
-        // モデルのロードと推論
-        async function predict(hand) {
-            // モデルのロード
-            const model = await tf.loadLayersModel('models/model1.json');
-            console.log('Model loaded');
-
-            // データの変換
-            let newData = [hand];
-            newData = convertElement(newData);
-
-            // TensorFlow.js用にデータを整形
-            const tensorData = tf.tensor2d(newData, [newData.length, newData[0].length], 'int32');
-
-            // モデルで予測を実行
-            const predictions = model.predict(tensorData);
-
-            // 予測結果の表示
-            predictions.data().then(data => {
-                const result = data[0] <= 0.5 ? 'generate' : 'exchange';
-                console.log(result);
-                document.getElementById('output').innerText = `Prediction: ${result}`;
-            });
-        }
-
-        // サンプルデータで予測を実行
-        window.onload = () => {
-            const sampleHand = ['H', 'O', 'C', 'N','C','C','C','C'];
-            predict(sampleHand);
-        }
-    </script>
+<body onload="loadModel()">
+    <h1>Element Prediction in TensorFlow.js</h1>
+    <button onclick="testPredict()">Test Prediction</button>
+    <p id="predictionResult"></p>
 </body>
 </html>
